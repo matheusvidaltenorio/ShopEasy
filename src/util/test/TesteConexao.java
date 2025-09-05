@@ -12,7 +12,7 @@ public class TesteConexao {
         try (Connection con = ConnectionFactory.getConnection()) {
             System.out.println("Conexão realizada com sucesso!");
 
-            // Teste simples: listar os produtos
+
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM produtos");
 
