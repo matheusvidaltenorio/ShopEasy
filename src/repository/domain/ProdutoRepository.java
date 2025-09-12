@@ -44,9 +44,33 @@ public class ProdutoRepository {
             }
             return produtos;
         }
-    //public void atualizarProduto(Produto produto){}
-    //public void excluirProduto(Produto produto){}
 
+        public void atualizarProduto(Produto p) {
+            String sql = "UPDATE produtos SET nome=?, preco=?, estoque=? WHERE id=?";
+            try (Connection conn = ConnectionFactory.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, p.getNome());
+                stmt.setDouble(2, p.getPreco());
+                stmt.setInt(3, p.getEstoque());
+                stmt.setInt(4, p.getId());
+                stmt.executeUpdate();
+                System.out.println("Produto atualizado com sucesso!");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void removerProduto(int id) {
+            String sql = "DELETE FROM produtos WHERE id=?";
+            try (Connection conn = ConnectionFactory.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+                System.out.println("Produto removido com sucesso!");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     
 
 }

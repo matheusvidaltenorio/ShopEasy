@@ -5,13 +5,13 @@ import util.domain.ConnectionFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioRepository {
     // Método para gerar hash da senha
-    private String gerarHash(String senha) {
+    /*private String gerarHash(String senha) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(senha.getBytes());
@@ -23,17 +23,78 @@ public class UsuarioRepository {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Erro ao gerar hash", e);
         }
-    }
+    }*/
 
-    /**public void adicionarUsuario(Usuario u) throws SQLException {
-        String sql = "INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)";
+    public void adicionarUsuario(Usuario u){
+        String sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, u.getNome());
             stmt.setString(2, u.getNome());
             stmt.setString(3, u.getNome());
+            stmt.executeUpdate();
 
+            System.out.println("Registro adicionado com sucesso!");
+        }catch (SQLException e){
+            e.printStackTrace();
         }
-    }**/
+    }
+
+    public List<Usuario> listarUsuarios(){
+        List<Usuario> lista = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)){
+
+            while (rs.next()){
+                Usuario u = new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha")
+                );
+                lista.add(u);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    public void atualizarUsuario(Usuario u) {
+        String sql = "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, u.getNome());
+            stmt.setString(2, u.getEmail());
+            stmt.setString(3,u.getSenhaHash());
+            stmt.setInt(4, u.getId());
+            stmt.executeUpdate();
+
+            System.out.println("Registro atualizado com sucesso!");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void removerUsuario(int id){
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+        try { Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+            System.out.println("Registro removido com sucesso!");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }
