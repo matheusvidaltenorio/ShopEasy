@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UsuarioRepository {
     // Método para gerar hash da senha
-    /*private String gerarHash(String senha) {
+    private String gerarHash(String senha) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(senha.getBytes());
@@ -23,16 +23,16 @@ public class UsuarioRepository {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Erro ao gerar hash", e);
         }
-    }*/
+    }
 
     public void adicionarUsuario(Usuario u){
-        String sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO usuarios (nome, email, senha_hash) VALUES (?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, u.getNome());
-            stmt.setString(2, u.getNome());
-            stmt.setString(3, u.getNome());
+            stmt.setString(2, u.getEmail());
+            stmt.setString(3, gerarHash(u.getSenhaHash()));
             stmt.executeUpdate();
 
             System.out.println("Registro adicionado com sucesso!");
@@ -54,7 +54,7 @@ public class UsuarioRepository {
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getString("email"),
-                        rs.getString("senha")
+                        rs.getString("senha_hash")
                 );
                 lista.add(u);
             }
@@ -66,7 +66,7 @@ public class UsuarioRepository {
     }
 
     public void atualizarUsuario(Usuario u) {
-        String sql = "UPDATE usuarios SET nome = ?, email = ?, senha = ? WHERE id = ?";
+        String sql = "UPDATE usuarios SET nome = ?, email = ?, senha_hash = ? WHERE id = ?";
         try (Connection conn = ConnectionFactory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, u.getNome());
