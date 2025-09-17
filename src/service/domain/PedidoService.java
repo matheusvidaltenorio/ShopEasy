@@ -29,4 +29,19 @@ public class PedidoService {
     public List<Pedido> listarPedidos() throws SQLException {
         return pedidoRepository.listar();
     }
+
+    // Busca pedido por ID
+    public Pedido buscarPedidoPorId(int id) throws SQLException {
+        return pedidoRepository.buscarPorId(id);
+    }
+
+    // Atualiza pedido
+    public void atualizarPedido(Pedido pedido) throws SQLException {
+        pedidoRepository.atualizar(pedido);
+    }
+
+    // Remove pedido
+    public void removerPedido(int id) throws SQLException {
+        pedidoRepository.remover(id);
+    }
 }

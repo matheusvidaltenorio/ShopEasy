@@ -53,5 +53,57 @@ public class PedidoItemRepository {
         }
         return itens;
     }
+
+    // Busca item pelo ID
+    public PedidoItem buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM pedido_itens WHERE id = ?";
+        PedidoItem item = null;
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                item = new PedidoItem(
+                        rs.getInt("id"),
+                        rs.getInt("pedido_id"),
+                        rs.getInt("produto_id"),
+                        rs.getInt("quantidade"),
+                        rs.getDouble("preco")
+                );
+            }
+        }
+        return item;
+    }
+
+    // Atualiza item
+    public void atualizar(PedidoItem item) throws SQLException {
+        String sql = "UPDATE pedido_itens SET pedido_id = ?, produto_id = ?, quantidade = ?, preco = ? WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, item.getPedidoId());
+            stmt.setInt(2, item.getProdutoId());
+            stmt.setInt(3, item.getQuantidade());
+            stmt.setDouble(4, item.getPreco());
+            stmt.setInt(5, item.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+    // Remove item
+    public void remover(int id) throws SQLException {
+        String sql = "DELETE FROM pedido_itens WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+    }
 }
 

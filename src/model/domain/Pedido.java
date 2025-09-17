@@ -21,6 +21,15 @@ public class Pedido {
         this.usuarioId = usuarioId;
         this.status = status;
         this.total = total;
+        this.criadoEm = LocalDateTime.now();
+    }
+    //para pesquisa
+    public Pedido(int id, int usuarioId, String status, double total, LocalDateTime criadoEm) {
+        this.id = id;
+        this.usuarioId = usuarioId;
+        this.status = status;
+        this.total = total;
+        this.criadoEm = criadoEm;
     }
 
     // Getters e Setters
@@ -41,5 +50,16 @@ public class Pedido {
 
     public List<PedidoItem> getItens() { return itens; }
     public void setItens(List<PedidoItem> itens) { this.itens = itens; }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", usuarioId=" + usuarioId +
+                ", status='" + status + '\'' +
+                ", total=" + total +
+                ", criadoEm=" + criadoEm +
+                '}';
+    }
 }
 

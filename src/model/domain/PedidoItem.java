@@ -16,6 +16,14 @@ public class PedidoItem {
         this.preco = preco;
     }
 
+    public PedidoItem(int id, int pedidoId, int produtoId, int quantidade, double preco) {
+        this.id = id;
+        this.pedidoId = pedidoId;
+        this.produtoId = produtoId;
+        this.quantidade = quantidade;
+        this.preco = preco;
+    }
+
     // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -31,4 +39,14 @@ public class PedidoItem {
 
     public double getPreco() { return preco; }
     public void setPreco(double preco) { this.preco = preco; }
+
+    public String toString() {
+        return "PedidoItem{" +
+                "id=" + id +
+                ", pedidoId=" + pedidoId +
+                ", produtoId=" + produtoId +
+                ", quantidade=" + quantidade +
+                ", preco=" + preco +
+                '}';
+    }
 }

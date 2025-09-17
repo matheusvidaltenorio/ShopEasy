@@ -10,33 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioRepository {
-    // Método para gerar hash da senha
-    private String gerarHash(String senha) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(senha.getBytes());
-            StringBuilder hex = new StringBuilder();
-            for (byte b : hash) {
-                hex.append(String.format("%02x", b));
-            }
-            return hex.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Erro ao gerar hash", e);
-        }
+    // Método para gerar hash com bcrypt
+    private String gerarHash(char[] senha){
+        // bcrypt precisa de String temporária
+        String senhaStr = new String(senha);
+        String hash = BCrypt.hashpw(senhaStr, BCrypt.gensalt(12));
+        senhaStr = null; // ajuda GC
+        return hash;
     }
 
     public void adicionarUsuario(Usuario u){
         String sql = "INSERT INTO usuarios (nome, email, senha_hash) VALUES (?, ?, ?)";
+
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, u.getNome());
             stmt.setString(2, u.getEmail());
-            stmt.setString(3, gerarHash(u.getSenhaHash()));
+            stmt.setString(3, gerarHash(u.getSenha()));
             stmt.executeUpdate();
 
+            // limpar senha da memória
+            u.limparSenha();
+
             System.out.println("Registro adicionado com sucesso!");
-        }catch (SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
         }
     }
@@ -67,11 +65,13 @@ public class UsuarioRepository {
 
     public void atualizarUsuario(Usuario u) {
         String sql = "UPDATE usuarios SET nome = ?, email = ?, senha_hash = ? WHERE id = ?";
+
         try (Connection conn = ConnectionFactory.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, u.getNome());
             stmt.setString(2, u.getEmail());
-            stmt.setString(3,u.getSenhaHash());
+            stmt.setString(3, gerarHash(u.getSenha()));
             stmt.setInt(4, u.getId());
             stmt.executeUpdate();
 

@@ -50,4 +50,55 @@ public class PedidoRepository {
         }
         return pedidos;
     }
+
+    // Busca um pedido pelo ID
+    public Pedido buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM pedidos WHERE id = ?";
+        Pedido pedido = null;
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    pedido = new Pedido(
+                            rs.getInt("id"),
+                            rs.getInt("usuario_id"),
+                            rs.getString("status"),
+                            rs.getDouble("total"),
+                            rs.getTimestamp("criado_em").toLocalDateTime()
+                    );
+                }
+            }
+        }
+        return pedido;
+    }
+
+    // Atualiza o status ou total do pedido
+    public void atualizar(Pedido pedido) throws SQLException {
+        String sql = "UPDATE pedidos SET usuario_id = ?, status = ?, total = ? WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, pedido.getUsuarioId());
+            stmt.setString(2, pedido.getStatus());
+            stmt.setDouble(3, pedido.getTotal());
+            stmt.setInt(4, pedido.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+    // Remove um pedido
+    public void remover(int id) throws SQLException {
+        String sql = "DELETE FROM pedidos WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+    }
 }
