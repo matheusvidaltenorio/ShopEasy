@@ -9,8 +9,5 @@
         <module name="ShopEasy-JDBC" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="ShopEasy-JDBC" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
 </project>
