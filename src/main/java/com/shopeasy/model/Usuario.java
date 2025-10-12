@@ -1,5 +1,6 @@
 package com.shopeasy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,10 +25,12 @@ public class Usuario {
     private String email;
 
     @Column(name = "senha_hash", nullable = false)
+    @JsonIgnore // garante que não apareça no JSON de resposta
     private String senhaHash;
 
     @Transient
-    private transient char[] senha; // senha temporária em memória
+    @JsonIgnore // não precisa expor
+    private transient char[] senha;
 
     public Usuario() {}
 

@@ -1,65 +1,129 @@
-/*package com.shopeasy.model;
+package com.shopeasy.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "pedidos")
 public class Pedido {
-    private int id;
-    private int usuarioId;   // FK para Usuario
-    private String status;   // pendente, pago, enviado
-    private double total;
+
+    public enum Status {
+        PENDENTE, PAGO, ENVIADO
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    // Relacionamento ManyToOne com Usuario
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    @Positive
+    @NotNull
+    @Column(nullable = false)
+    private BigDecimal total;
+
+    @Column(name = "criado_em", nullable = false)
     private LocalDateTime criadoEm;
 
     // Um pedido pode ter vários itens
-    private List<PedidoItem> itens;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PedidoItem> itens = new ArrayList<>();
 
-    // Construtor vazio (necessário para frameworks e instanciamento manual)
-    public Pedido() {}
+    // Construtor vazio
+    public Pedido() {
+        this.criadoEm = LocalDateTime.now();
+    }
 
-    // Construtor para novo pedido (sem id e criadoEm, banco gera)
-    public Pedido(int usuarioId, String status, double total) {
-        this.usuarioId = usuarioId;
+    // Construtor para criar pedido
+    public Pedido(Usuario usuario, Status status, BigDecimal total) {
+        this.usuario = usuario;
         this.status = status;
         this.total = total;
         this.criadoEm = LocalDateTime.now();
     }
-    //para pesquisa
-    public Pedido(int id, int usuarioId, String status, double total, LocalDateTime criadoEm) {
+
+    // Getters e Setters
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
-        this.usuarioId = usuarioId;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
     }
 
-    // Getters e Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public List<PedidoItem> getItens() {
+        return itens;
+    }
 
-    public int getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(int usuarioId) { this.usuarioId = usuarioId; }
+    public void setItens(List<PedidoItem> itens) {
+        this.itens = itens;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void adicionarItem(PedidoItem item) {
+        itens.add(item);
+        item.setPedido(this);
+    }
 
-    public double getTotal() { return total; }
-    public void setTotal(double total) { this.total = total; }
-
-    public LocalDateTime getCriadoEm() { return criadoEm; }
-    public void setCriadoEm(LocalDateTime criadoEm) { this.criadoEm = criadoEm; }
-
-    public List<PedidoItem> getItens() { return itens; }
-    public void setItens(List<PedidoItem> itens) { this.itens = itens; }
+    public void removerItem(PedidoItem item) {
+        itens.remove(item);
+        item.setPedido(null);
+    }
 
     @Override
     public String toString() {
         return "Pedido{" +
                 "id=" + id +
-                ", usuarioId=" + usuarioId +
-                ", status='" + status + '\'' +
+                ", usuario=" + (usuario != null ? usuario.getNome() : null) +
+                ", status=" + status +
                 ", total=" + total +
                 ", criadoEm=" + criadoEm +
+                ", itens=" + itens.size() +
                 '}';
     }
-}*/
-
+}

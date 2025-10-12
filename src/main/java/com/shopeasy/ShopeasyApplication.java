@@ -13,16 +13,5 @@ public class ShopeasyApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShopeasyApplication.class, args);
     }
-
-    @Bean
-    public CommandLineRunner run(UsuarioService usuarioService) {
-        return args -> {
-            Usuario u1 = new Usuario("lari", "lari@email.com", "321654".toCharArray());
-            usuarioService.cadastrarUsuario(u1);
-
-            System.out.println("Lista de usuários:");
-            usuarioService.listarUsuarios().forEach(System.out::println);
-        };
-    }
 }
 

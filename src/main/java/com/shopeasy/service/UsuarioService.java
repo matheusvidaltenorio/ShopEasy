@@ -5,6 +5,7 @@ import com.shopeasy.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.mindrot.jbcrypt.BCrypt;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,22 +31,42 @@ public class UsuarioService {
     }
 
     public Usuario cadastrarUsuario(Usuario usuario) {
+        //  Verifica se já existe um usuário com o mesmo e-mail
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("E-mail já cadastrado!");
+        }
+
+        //  Gera o hash e limpa a senha
         usuario.setSenhaHash(gerarHash(usuario.getSenha()));
         usuario.limparSenha();
+
+        //  Salva no banco
         return usuarioRepository.save(usuario);
     }
+
 
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
     }
+
     /*Atualiza um usuário. Só re-hash se a senha tiver sido enviada.*/
     public Usuario atualizarUsuario(Usuario usuario) {
+        // Buscar o usuário existente
+        Usuario existente = usuarioRepository.findById(usuario.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        // Atualizar campos
+        existente.setNome(usuario.getNome());
+        existente.setEmail(usuario.getEmail());
+
         if (usuario.getSenha() != null && usuario.getSenha().length > 0) {
-            usuario.setSenhaHash(gerarHash(usuario.getSenha()));
+            existente.setSenhaHash(gerarHash(usuario.getSenha()));
             usuario.limparSenha();
         }
-        return usuarioRepository.save(usuario);
+
+        return usuarioRepository.save(existente);
     }
+
 
     public void removerUsuario(Integer id) {
         if (!usuarioRepository.existsById(id)) {
@@ -61,4 +82,9 @@ public class UsuarioService {
     public Optional<Usuario> buscarPorEmail(String email) {
         return Optional.ofNullable(usuarioRepository.findByEmail(email));
     }
+
+    public Optional<Usuario> buscarPorId(Integer id) {
+        return usuarioRepository.findById(id);
+    }
+
 }
