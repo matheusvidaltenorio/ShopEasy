@@ -991,17 +991,17 @@ includes []
 2025-10-07T10:16:34.419-03:00  WARN 9192 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2025-10-07T10:16:34.654-03:00  INFO 9192 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
 2025-10-07T10:16:34.664-03:00  INFO 9192 --- [           main] com.shopeasy.ShopeasyApplication         : Started ShopeasyApplication in 2.939 seconds (process running for 3.214)
-Hibernate: insert into usuarios (email,nome,senha_hash) values (?,?,?) returning id
+Hibernate: insert into users (email,nome,senha_hash) values (?,?,?) returning id
 2025-10-07T10:16:34.950-03:00  WARN 9192 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2025-10-07T10:16:34.950-03:00 ERROR 9192 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERRO: duplicar valor da chave viola a restrição de unicidade "usuarios_email_key"
-  Detalhe: Chave (email)=(lari@email.com) já existe.
+2025-10-07T10:16:34.950-03:00 ERROR 9192 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERRO: duplicar valor da chave viola a restriï¿½ï¿½o de unicidade "usuarios_email_key"
+  Detalhe: Chave (email)=(lari@email.com) jï¿½ existe.
 2025-10-07T10:16:34.959-03:00  INFO 9192 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
 
 Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
 2025-10-07T10:16:34.970-03:00 ERROR 9192 --- [           main] o.s.boot.SpringApplication               : Application run failed
 
-org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERRO: duplicar valor da chave viola a restrição de unicidade "usuarios_email_key"
-  Detalhe: Chave (email)=(lari@email.com) já existe.] [insert into usuarios (email,nome,senha_hash) values (?,?,?) returning id]; SQL [insert into usuarios (email,nome,senha_hash) values (?,?,?) returning id]; constraint [null]
+org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERRO: duplicar valor da chave viola a restriï¿½ï¿½o de unicidade "usuarios_email_key"
+  Detalhe: Chave (email)=(lari@email.com) jï¿½ existe.] [insert into users (email,nome,senha_hash) values (?,?,?) returning id]; SQL [insert into users (email,nome,senha_hash) values (?,?,?) returning id]; constraint [null]
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290) ~[spring-orm-6.1.13.jar:6.1.13]
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241) ~[spring-orm-6.1.13.jar:6.1.13]
 	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550) ~[spring-orm-6.1.13.jar:6.1.13]
@@ -1015,7 +1015,7 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.13.jar:6.1.13]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.1.13.jar:6.1.13]
 	at jdk.proxy2/jdk.proxy2.$Proxy136.save(Unknown Source) ~[na:na]
-	at com.shopeasy.service.UsuarioService.cadastrarUsuario(UsuarioService.java:35) ~[classes/:na]
+	at com.shopeasy.service.UsersService.cadastrarUsuario(UsuarioService.java:35) ~[classes/:na]
 	at com.shopeasy.ShopeasyApplication.lambda$run$0(ShopeasyApplication.java:21) ~[classes/:na]
 	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790) ~[spring-boot-3.3.4.jar:3.3.4]
 	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:83) ~[spring-core-6.1.13.jar:6.1.13]
@@ -1037,8 +1037,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-3.3.4.jar:3.3.4]
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352) ~[spring-boot-3.3.4.jar:3.3.4]
 	at com.shopeasy.ShopeasyApplication.main(ShopeasyApplication.java:14) ~[classes/:na]
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [ERRO: duplicar valor da chave viola a restrição de unicidade "usuarios_email_key"
-  Detalhe: Chave (email)=(lari@email.com) já existe.] [insert into usuarios (email,nome,senha_hash) values (?,?,?) returning id]
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [ERRO: duplicar valor da chave viola a restriï¿½ï¿½o de unicidade "usuarios_email_key"
+  Detalhe: Chave (email)=(lari@email.com) jï¿½ existe.] [insert into users (email,nome,senha_hash) values (?,?,?) returning id]
 	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
 	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
 	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
@@ -1095,8 +1095,8 @@ Caused by: org.hibernate.exception.ConstraintViolationException: could not execu
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.13.jar:6.1.13]
 	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138) ~[spring-tx-6.1.13.jar:6.1.13]
 	... 29 common frames omitted
-Caused by: org.postgresql.util.PSQLException: ERRO: duplicar valor da chave viola a restrição de unicidade "usuarios_email_key"
-  Detalhe: Chave (email)=(lari@email.com) já existe.
+Caused by: org.postgresql.util.PSQLException: ERRO: duplicar valor da chave viola a restriï¿½ï¿½o de unicidade "usuarios_email_key"
+  Detalhe: Chave (email)=(lari@email.com) jï¿½ existe.
 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2733) ~[postgresql-42.7.4.jar:42.7.4]
 	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2420) ~[postgresql-42.7.4.jar:42.7.4]
 	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372) ~[postgresql-42.7.4.jar:42.7.4]
